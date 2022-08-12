@@ -1,8 +1,12 @@
+/*
+* encoding: EUC-KR
+*/
+
 CoordMode, Mouse, Screen
 CoordMode, Pixel, Screen
 
 ;마우스 강제 이동 시간
-global forceMouseMoveTime = 300 * 1000
+global forceMouseMoveTime = 5 * 60 * 1000
 
 ;마우스 강제 이동 횟수
 global forceMouseMoveCount = 0
@@ -13,7 +17,7 @@ global lastMousePositionY = 0
 global lastMouseMoveTime := A_TickCount
 
 ;툴팁 알림 표시 시간
-global displayToolTipTime = 60 * 1000
+global displayToolTipTime = 1 * 60 * 1000
 
 ;시작
 MouseGetPos, lastMousePositionX, lastMousePositionY
