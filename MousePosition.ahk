@@ -2,8 +2,11 @@
 * encoding: EUC-KR
 */
 
+;초기화
+#SingleInstance, force
 CoordMode, Mouse, Screen
 CoordMode, Pixel, Screen
+SetTitleMatchMode, 3
 
 ;마우스 강제 이동 시간
 global forceMouseMoveTime = 5 * 60 * 1000
@@ -20,6 +23,7 @@ global lastMouseMoveTime := A_TickCount
 global displayToolTipTime = 1 * 60 * 1000
 
 ;시작
+RunMotionProApps()
 MouseGetPos, lastMousePositionX, lastMousePositionY
 SetTimer, MousePositionDetecting, 100
 Return
@@ -37,6 +41,24 @@ LoginMotionPro()
 Return
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+/*
+* 모션프로 실행
+*/
+RunMotionProApps()
+{
+    ;모션프로 실행
+    If (!WinExist("MotionPro"))
+    {
+        Run C:\Program Files\Array Networks\MotionPro VPN Client\MotionPro.exe
+    }
+
+    ;모션프로OTP 실행
+    If (!WinExist("MotionProOTP"))
+    {
+        Run C:\Users\psg10\AppData\Local\Microsoft\WindowsApps\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe\WsaClient.exe /launch wsa://com.arraynetworks.authentication
+    }
+}
 
 /*
 * 마우스 위치 감지
