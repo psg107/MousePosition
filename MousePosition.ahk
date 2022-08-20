@@ -9,6 +9,7 @@
 #SingleInstance, force
 CoordMode, Mouse, Screen
 CoordMode, Pixel, Screen
+CoordMode, ToolTip, Screen
 SetTitleMatchMode, 3
 
 ;마우스 강제 이동 시간
@@ -105,22 +106,38 @@ RunMousePositionDetecting()
 */
 LoginMotionPro()
 {
+    MOTION_PRO_WINDOW_TITLE = MotionPro
+    MOTION_PRO_LOGIN_WINDOW_TITLE = Authentication Information
+    MOTION_PRO_OTP_WINDOW_TITLE = MotionProOTP
+    TEMP_CLIPBOARD_MESSAGE = THIS_IS_TEMP_MESSAGE
+
+    WinActivate, %MOTION_PRO_WINDOW_TITLE%
+
     ;로그인 창이 없으면 종료
-    If (!WinExist("Authentication Information"))
+    If (!WinExist(MOTION_PRO_LOGIN_WINDOW_TITLE))
     {
         SoundBeep, 300, 500
         Return
     }
 
+    ;활성화
+    WinActivate, %MOTION_PRO_LOGIN_WINDOW_TITLE%
+
     ;속도 초기화
     SetControlDelay -1
     SetKeyDelay, -1
 
+    ;테스트 비밀번호 입력
+    SetKeyDelay, -1, 10
+    ControlSendRaw, Qt5QWindowIcon17, INPUT TEST, %MOTION_PRO_LOGIN_WINDOW_TITLE%
+
+    Sleep, 500
+
     ;비밀번호 지우기
     loop 30
     {
-        ControlSend, Qt5QWindowIcon17, {BackSpace}, Authentication Information
-        ControlSend, Qt5QWindowIcon17, {Delete}, Authentication Information
+        ControlSend, Qt5QWindowIcon17, {BackSpace}, %MOTION_PRO_LOGIN_WINDOW_TITLE%
+        ControlSend, Qt5QWindowIcon17, {Delete}, %MOTION_PRO_LOGIN_WINDOW_TITLE%
     }
     Sleep, 200
 
@@ -128,25 +145,46 @@ LoginMotionPro()
     password = Inter123$`%^
 
     ;비밀번호 OTP 추가
-    If (WinExist("MotionProOTP"))
+    If (WinExist(MOTION_PRO_OTP_WINDOW_TITLE))
     {
-        ControlClick, x300 y320, MotionProOTP
-        SoundBeep, 800, 100
-        SoundBeep, 800, 100
+        oldClipboard := Clipboard
 
-        password := password . Clipboard
+        Clipboard := TEMP_CLIPBOARD_MESSAGE
+
+        loop
+        {
+            ControlClick, x300 y320, MotionProOTP
+            SoundBeep, 800, 100
+            SoundBeep, 800, 100
+
+            If (Clipboard == TEMP_CLIPBOARD_MESSAGE)
+            {
+                Sleep, 200
+                Continue
+            }
+
+            password := password . Clipboard
+            Clipboard := oldClipboard
+            Break
+        }
     }
 
     ;비밀번호 입력 위치 클릭
-    ControlClick, x315 y200, Authentication Information
+    ControlClick, x315 y200, %MOTION_PRO_LOGIN_WINDOW_TITLE%
     Sleep, 200
 
     ;비밀번호 입력
     SetKeyDelay, -1, 10
-    ControlSendRaw, Qt5QWindowIcon17, %password%, Authentication Information
+    ControlSendRaw, Qt5QWindowIcon17, %password%, %MOTION_PRO_LOGIN_WINDOW_TITLE%
     SoundBeep, 1000, 50
     SoundBeep, 1000, 50
     SoundBeep, 1000, 50
+
+    WinGetPos, x,y, width,height, %MOTION_PRO_LOGIN_WINDOW_TITLE%
+
+    ToolTip %password%, x + 30,y + 30
+    Sleep, 5000
+    ToolTip
     
     Return
 }
