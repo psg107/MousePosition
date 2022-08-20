@@ -12,6 +12,14 @@ CoordMode, Pixel, Screen
 CoordMode, ToolTip, Screen
 SetTitleMatchMode, 3
 
+;상수
+global MOTION_PRO_WINDOW_TITLE       = "MotionPro"
+global MOTION_PRO_LOGIN_WINDOW_TITLE = "Authentication Information"
+global MOTION_PRO_OTP_WINDOW_TITLE   = "MotionProOTP"
+global TEMP_CLIPBOARD_MESSAGE        = "THIS_IS_TEMP_MESSAGE"
+global MOTION_PRO_PATH               = "C:\Program Files\Array Networks\MotionPro VPN Client\MotionPro.exe"
+global MOTION_PRO_OTP_PATH           = "C:\Users\psg10\AppData\Local\Microsoft\WindowsApps\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe\WsaClient.exe /launch wsa://com.arraynetworks.authentication"
+
 ;마우스 강제 이동 시간
 global forceMouseMoveTime = 5 * 60 * 1000
 
@@ -52,15 +60,15 @@ Return
 RunMotionProApps()
 {
     ;모션프로 실행
-    If (!WinExist("MotionPro"))
+    If (!WinExist(MOTION_PRO_WINDOW_TITLE))
     {
-        Run C:\Program Files\Array Networks\MotionPro VPN Client\MotionPro.exe
+        Run %MOTION_PRO_PATH%
     }
 
     ;모션프로OTP 실행
-    If (!WinExist("MotionProOTP"))
+    If (!WinExist(MOTION_PRO_OTP_WINDOW_TITLE))
     {
-        Run C:\Users\psg10\AppData\Local\Microsoft\WindowsApps\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe\WsaClient.exe /launch wsa://com.arraynetworks.authentication
+        Run %MOTION_PRO_OTP_PATH%
     }
 }
 
@@ -106,11 +114,6 @@ RunMousePositionDetecting()
 */
 LoginMotionPro()
 {
-    MOTION_PRO_WINDOW_TITLE = MotionPro
-    MOTION_PRO_LOGIN_WINDOW_TITLE = Authentication Information
-    MOTION_PRO_OTP_WINDOW_TITLE = MotionProOTP
-    TEMP_CLIPBOARD_MESSAGE = THIS_IS_TEMP_MESSAGE
-
     WinActivate, %MOTION_PRO_WINDOW_TITLE%
 
     ;로그인 창이 없으면 종료
